@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Greenview</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsG_8Uvxbasx6St9aSjacLW92N-iIrm8g&amp;libraries=places"></script>
+</head>
+<body>
+    <app-root></app-root>
+    <div class="spinner-wrapper" id="preloader">
+        <div class="spinner-container">
+            <div class="spinner-outer">
+                <div class="spinner">
+                    <div class="left mask">
+                        <div class="plane"></div>  
+                    </div>            
+                    <div class="top mask">
+                        <div class="plane"></div>
+                    </div>
+                    <div class="right mask">
+                        <div class="plane"></div>  
+                    </div>            
+                    <div class="triangle">
+                        <div class="triangle-plane"></div> 
+                    </div>
+                    <div class="top-left mask">
+                        <div class="plane"></div>
+                    </div>
+                    <div class="top-right mask">
+                        <div class="plane"></div>
+                    </div>            
+                </div>
+                <p class="spinner-text">Greenview</p> 
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+</body>
+</html>

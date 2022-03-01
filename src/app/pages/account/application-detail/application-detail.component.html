@@ -1,0 +1,209 @@
+
+<mat-card class="mt-3">
+  <mat-card-content fxLayout="row">
+    <img fxLayout="column" fxFlex="30" [src]="application?.property.gallery[0].small" [style.width.px]="200" class="mw-100">
+    <div fxLayout="column" fxFlex="70" class="cDiv">
+      <mat-card-title fxLayout="row" fxFlex="30" fxLayoutAlign="center" class="uppercase cTitle" >{{application?.property.title}}</mat-card-title>
+      <p fxLayout="row" fxFlex="70" class='cStatus' fxLayoutAlign="center"  >{{status(application?.status)}}</p>
+      <form [formGroup]="paymentForm" class="cForm" [action]='paymentSubmitUrl' method='post' [hidden]='application?.status !== 1 || application?.contract?.recurring === 1'>
+        <div class="d-flex">
+          <input type="hidden" name="authtoken" [value]="appService.currentUserValue.token" />
+          <input type="hidden" name="property_id" [value]="application?.property_id" />
+          <div>
+            <div #paymentScript></div> 
+          </div>
+          <mat-checkbox name="recurring" class="ml-2">Recurring</mat-checkbox>
+        </div>
+      </form>
+      <div  class="cButton" *ngIf='application?.contract?.recurring == 1'>
+        <button mat-raised-button color="warn" (click)="handleCancelSubscription()" >Cancel Subscription</button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div *ngIf="application?.status === 2">
+
+  <mat-card class="mt-3">
+    <mat-card-header fxLayoutAlign="center center">
+        <mat-card-title class="uppercase">Reason</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <p>{{application?.reject_reason}}</p>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngIf="application?.status === 0 || application?.status === 1">
+
+  <mat-card class="mt-3">
+    <mat-card-header fxLayoutAlign="center center">
+        <mat-card-title class="uppercase">Content</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <p>{{application?.content}}</p>
+    </mat-card-content>
+  </mat-card>
+</div>
+<mat-card *ngIf="application?.status === 0 || application?.status === 2" class="mt-3">
+  <mat-card-header fxLayoutAlign="center center">
+      <mat-card-title class="uppercase">Details</mat-card-title>
+  </mat-card-header>
+
+  <div fxLayout="row wrap" class="details">
+    <div fxFlex="100" fxFlex.gt-xs="20" fxLayout="row" class="item">
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Address:</span>
+        <span class="ml-3">{{application?.address}}</span>
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>City:</span>
+        <span class="ml-3">{{application?.city}}</span>
+    </div>
+  </div>
+  
+  <div fxLayout="row wrap" class="details">
+    <div fxFlex="100" fxFlex.gt-xs="20" fxLayout="row" class="item">
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>State:</span>
+        <span class="ml-3">{{application?.state}}</span>
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Zip Code:</span>
+        <span class="ml-3">{{application?.zip}}</span>
+    </div>
+  </div>
+
+  <div fxLayout="row wrap" class="details">
+    <div fxFlex="100" fxFlex.gt-xs="20" fxLayout="row" class="item">
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>How long live:</span>
+        <span class="ml-3">{{application?.how_long_live}} year(s)</span>
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Phone Number:</span>
+        <span class="ml-3">{{application?.phone_number}}</span>
+    </div>
+  </div>
+
+  <div fxLayout="row wrap" class="details">
+    <div fxFlex="100" fxFlex.gt-xs="20" fxLayout="row" class="item">
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Email:</span>
+        <span class="ml-3">{{application?.email}}</span>
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Period:</span>
+        <span class="ml-3">{{application?.period}} month(s)</span>
+    </div>
+  </div>
+
+  <div fxLayout="row wrap" class="details">
+    <div fxFlex="100" fxFlex.gt-xs="20" fxLayout="row" class="item">
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Job:</span>
+        <span class="ml-3">{{application?.job}}</span>
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Job City:</span>
+        <span class="ml-3">{{application?.job_city}}</span>
+    </div>
+  </div>
+  <div fxLayout="row wrap" class="details">
+    <div fxFlex="100" fxFlex.gt-xs="20" fxLayout="row" class="item">
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Monthly Income:</span>
+        <span class="ml-3">{{application?.monthly_income}} $</span>
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Job State:</span>
+        <span class="ml-3">{{application?.job_state}}</span>
+    </div>
+  </div>
+
+  <div fxLayout="row wrap" class="details">
+    <div fxFlex="100" fxFlex.gt-xs="20" fxLayout="row" class="item">
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>How long work:</span>
+        <span class="ml-3">{{application?.how_long_work}} year(s)</span>
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Pet:</span>
+        <span class="ml-3">{{application?.pet}}</span>
+    </div>
+  </div>
+
+  <div fxLayout="row wrap" class="details">
+    <div fxFlex="100" fxFlex.gt-xs="20" fxLayout="row" class="item">
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Pet Count:</span>
+        <span class="ml-3">{{application?.pet_count}}</span>
+    </div>
+    <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+        <span>Sign:</span>
+        <span class="ml-3">{{application?.sign}}</span>
+    </div>
+  </div>
+</mat-card>
+
+<div [hidden]="application?.status !== 1"> 
+    <mat-card *ngIf="application?.status === 1" class="mt-3">
+      <mat-card-header fxLayoutAlign="center center">
+          <mat-card-title class="uppercase">Contract Information</mat-card-title>
+      </mat-card-header>
+    
+      <div fxLayout="row wrap" class="details">
+        <div fxFlex="100" fxFlex.gt-xs="30" fxLayout="row" class="item">
+          <span>Period:</span>
+          <span class="ml-3">{{application?.period}} month(s)</span>
+        </div>
+        <div fxFlex="100" fxFlex.gt-xs="30" fxLayout="row" class="item">
+            <span>Type:</span>
+            <span class="ml-3">{{application?.contract?.type}}</span>
+        </div>
+        <div fxFlex="100" fxFlex.gt-xs="40" fxLayout="row" class="item">
+            <span>Contract Date:</span>
+            <span class="ml-3">{{application?.contract?.created_at}}</span>
+        </div>
+      </div>
+    </mat-card>
+    <div class="table-wrapper" > 
+      <table mat-table [dataSource]="dataSource" matSort class="w-100">
+        <thead>
+          Payment history
+        </thead>
+        <tbody>
+          
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> No </th>
+            <td mat-cell *matCellDef="let history; let i = index"> {{i + 1}} </td>
+          </ng-container>  
+  
+          <ng-container matColumnDef="paid_amount">
+            <th mat-header-cell *matHeaderCellDef> Paid Amount </th>
+            <td mat-cell *matCellDef="let history">{{ history.paid_amount }} $</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="created_at">
+            <th mat-header-cell *matHeaderCellDef> Date </th> 
+            <td mat-cell *matCellDef="let history">{{ history.created_at }}</td>
+          </ng-container> 
+      
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let application; columns: displayedColumns;">
+          </tr>
+        </tbody>
+        
+      </table> 
+      <p *ngIf="dataSource?.data.length === 0" class="py-5 mb-0 text-center">No data available</p> 
+   </div>
+   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+</div>

@@ -1,0 +1,123 @@
+<app-header-image [backgroundImage]="'assets/images/carousel/slide-3.jpg'" 
+                  [bgImageAnimate]="false" 
+                  [contentOffsetToTop]="false" 
+                  [desc]="'“Home is where one starts from...” –T.S. Eliot'"
+                  [contentMinHeight]="200">
+</app-header-image>
+ 
+<div class="px-3"> 
+    
+  <div class="theme-container">  
+
+    <mat-sidenav-container class="all-properties mt-3"> 
+      <mat-sidenav #sidenav [autoFocus]="false" [opened]="sidenavOpen" [mode]="sidenavOpen ? 'side' : 'over'" class="search-sidenav">         
+        <mat-card [perfectScrollbar]="psConfig"> 
+          <button fxHide="false" fxHide.gt-xs mat-icon-button (click)="sidenav.toggle()">
+              <mat-icon color="accent">close</mat-icon>
+          </button>
+          <app-properties-search 
+              [variant]="settings.searchPanelVariant"
+              [vertical]="true"
+              [searchOnBtnClick]="settings.searchOnBtnClick"              
+              [removedSearchField]="removedSearchField" 
+              (onSearchChange)="searchChanged($event)"
+              (onClear)="searchClear($event)"
+              (onSearchClick)="searchClicked($event)">
+          </app-properties-search>
+        </mat-card> 
+      </mat-sidenav>
+
+      <mat-sidenav-content ngClass.gt-sm="distance"> 
+
+        <div fxLayout="row wrap" class="properties-wrapper mt-0">            
+           
+            <div fxFlex="100" class="px-2 pb-2 pt-0">                
+                <app-properties-toolbar [showSidenavToggle]="!sidenavOpen"
+                                        [showPageSize]="true"
+                                        (onSidenavToggle)="sidenav.toggle()"
+                                        (onChangeCount)="changeCount($event)"
+                                        (onChangeSorting)="changeSorting($event)"
+                                        (onChangeViewType)="changeViewType($event)">
+                </app-properties-toolbar>
+            </div>
+           
+            <div fxFlex="100" fxLayoutAlign="start start" class="p-2"> 
+                <mat-chip-list [ngClass]="(settings.rtl) ? 'ml-2' : 'mr-2'">
+                    <mat-chip selected disableRipple="true" color="warn" class="uppercase ws-nowrap">
+                        {{ pagination?.total }} found
+                    </mat-chip> 
+                </mat-chip-list>
+                <app-properties-search-results-filters 
+                    [searchFields]="searchFields" 
+                    (onRemoveSearchField)="removeSearchField($event)">
+                </app-properties-search-results-filters>                 
+            </div>
+
+            <div fxFlex="100" fxLayoutAlign="start start" class="p-2" *ngIf="viewType=='map'">
+                <google-map fxFlex="100" height="500px" width="100%" [zoom]="zoom" [center]="center" [options]="options">
+                    <map-marker
+                        #markerElem
+                        *ngFor="let marker of markers"
+                        [position]="marker.position"
+                        [label]="marker.label"
+                        [title]="marker.title"
+                        [options]="marker.options"
+                        (mapClick)="openInfo(markerElem, marker.info)"
+                        >
+                    </map-marker>
+                    <map-info-window>
+                        <div class="d-flex" *ngIf="infoContent">
+                            <img [src]="infoContent.gallery[0].medium" width="64px">
+                            <div>
+                                <div><b>{{ infoContent.title }}</b></div>
+                                <div *ngIf="infoContent.details.price_dollar_sale">Selling at: {{ infoContent.details.price_dollar_sale | currency : 'USD' : 'symbol' : '1.0' }}</div>
+                                <div *ngIf="infoContent.details.price_dollar_rent">Renting at: {{ infoContent.details.price_dollar_rent | currency : 'USD' : 'symbol' : '1.0' }}</div>
+                                <div class="d-flex jc-space-between" ><div>Property size</div><div>{{infoContent.details.area.value}} {{infoContent.details.area.unit}}</div></div>
+                                <div>
+                                    <a [routerLink]="['/properties', infoContent.id]" color="primary" class="uppercase">Details</a>
+                                </div> 
+                            </div>
+                        </div>
+                    </map-info-window>
+                </google-map>
+            </div>
+
+            <div fxLayout="row wrap" fxFlex="100" fxLayoutAlign="start start" class="p-2" *ngIf="viewType!='map'">
+                <div *ngFor="let property of properties" [fxFlex]="(viewType=='grid') ? viewCol : 100"  class="item">
+                    <app-property-item [property]="property" [viewType]="viewType" [viewColChanged]="viewCol" [fullWidthPage]="false"></app-property-item>
+                </div>
+            </div>
+
+            <div *ngIf="properties?.length == 0" fxFlex="100" fxLayoutAlign="center center" [style.min-height.px]="200">                
+                <mat-spinner *ngIf="!message"></mat-spinner>
+                <mat-chip-list *ngIf="message">
+                    <mat-chip selected disableRipple="true" color="warn" class="uppercase ws-nowrap">
+                        {{message}}
+                    </mat-chip> 
+                </mat-chip-list> 
+            </div>            
+
+            <div *ngIf="properties?.length > 0" fxFlex="100" fxLayoutAlign="center center" class="p-2">
+                <mat-paginator [length]="pagination?.total"
+                              [pageSize]="pagination?.perPage"
+                              (page)="onPageChange($event)"
+                              class="w-100 mat-elevation-z1">
+                </mat-paginator>
+            </div>          
+         
+        </div>
+
+        
+
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+  </div>
+
+</div>
+
+
+
+<app-clients></app-clients>
+
+<app-get-in-touch></app-get-in-touch>
